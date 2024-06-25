@@ -3,22 +3,22 @@
 ################################################################################
 output "vpc_id" {
   description = "The ID of the VPC"
-  value       = try(aws_vpc.main.id, null)
+  value       = try(module.vpc.vpc_id, null)
 }
 
 output "vpc_arn" {
   description = "The ARN of the VPC"
-  value       = try(aws_vpc.main.arn, null)
+  value       = try(module.vpc.vpc_arn, null)
 }
 
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC"
-  value       = try(aws_vpc.main.cidr_block, null)
+  value       = try(module.vpc.vpc_cidr_block, null)
 }
 
 output "default_security_group_id" {
   description = "The ID of the security group created by default on VPC creation"
-  value       = try(aws_vpc.main.default_security_group_id, null)
+  value       = try(module.vpc.default_security_group_id, null)
 }
 
 ################################################################################
@@ -27,12 +27,12 @@ output "default_security_group_id" {
 
 output "igw_id" {
   description = "The ID of the Internet Gateway"
-  value       = try(aws_internet_gateway.this.id, null)
+  value       = try(module.vpc.igw_id, null)
 }
 
 output "igw_arn" {
   description = "The ARN of the Internet Gateway"
-  value       = try(aws_internet_gateway.this.arn, null)
+  value       = try(module.vpc.igw_arn, null)
 }
 
 ################################################################################
@@ -41,17 +41,17 @@ output "igw_arn" {
 
 output "public_subnets" {
   description = "List of IDs of public subnets"
-  value       = aws_subnet.public[*].id
+  value       = module.vpc.public_subnets
 }
 
 output "public_subnet_arns" {
   description = "List of ARNs of public subnets"
-  value       = aws_subnet.public[*].arn
+  value       = module.vpc.public_subnet_arns
 }
 
 output "public_subnets_cidr_blocks" {
   description = "List of cidr_blocks of public subnets"
-  value       = aws_subnet.public[*].cidr_block
+  value       = module.vpc.public_subnets_cidr_blocks
 }
 
 ################################################################################
@@ -60,16 +60,16 @@ output "public_subnets_cidr_blocks" {
 
 output "private_subnets" {
   description = "List of IDs of private subnets"
-  value       = aws_subnet.private[*].id
+  value       = module.vpc.private_subnets
 }
 
 output "private_subnet_arns" {
   description = "List of ARNs of private subnets"
-  value       = aws_subnet.private[*].arn
+  value       = module.vpc.private_subnet_arns
 }
 
 output "private_subnets_cidr_blocks" {
   description = "List of cidr_blocks of private subnets"
-  value       = aws_subnet.private[*].cidr_block
+  value       = module.vpc.private_subnets_cidr_blocks
 }
 
