@@ -11,12 +11,17 @@ provider "aws" {
   region = var.region
 }
 
+locals {
+  len_public_subnets  = length(var.public_subnets)
+  len_private_subnets = length(var.private_subnets)
+}
+
 resource "aws_vpc" "main" {
-  cidr_block       = "10.0.0.0/16"
-  instance_tenancy = "default"
+  cidr_block       = var.cidr
+  instance_tenancy = var.instance_tenancy
 
   tags = {
-    Name       = "${var.env}-vpc-${var.cost_center}"
+    Name       = "${var.env}-vpc-${var.name}"
     Owner      = var.owner
     Enviroment = var.env
     CostCenter = var.cost_center
@@ -25,10 +30,11 @@ resource "aws_vpc" "main" {
 
 
 # Public Subnets
-resource "aws_subnet" "public_a" {
+resource "aws_subnet" "public" {
+  count = len_public_subnets
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "${var.region}a"
+  cidr_block              = element(concat(var.public_subnets, [""]), count.index)
+  availability_zone       = length(regexall("^[a-z]{2}-", element(var.azs, count.index))) > 0 ? element(var.azs, count.index) : null
   map_public_ip_on_launch = true
 
   tags = {
@@ -129,7 +135,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "this" {
-  subnet_id = aws_subnet.public_a.id
+  subnet_id     = aws_subnet.public_a.id
   allocation_id = aws_eip.nat.id
   tags = {
     Name       = "${var.env}-nat-gateway"
