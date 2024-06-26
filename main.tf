@@ -28,6 +28,7 @@ module "ec2_instance" {
 
   name      = each.value.name
   type      = each.value.type
+  vpc_id    = module.vpc.vpc_id
   subnet_id = each.value.is_public ? module.vpc.public_subnets[0] : module.vpc.private_subnets[0]
 }
 
