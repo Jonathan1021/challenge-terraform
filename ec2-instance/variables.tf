@@ -1,5 +1,5 @@
 variable "region" {
-  description = "Cost Center"
+  description = "Region"
   type        = string
   default     = "us-east-1"
 }
@@ -20,6 +20,16 @@ variable "env" {
   description = "Enviroment"
   type        = string
   default     = "dev"
+}
+
+variable "name" {
+  description = "Name Instance"
+  type        = string
+}
+
+variable "type" {
+  description = "Type Instance"
+  type        = string
 }
 
 variable "ami" {

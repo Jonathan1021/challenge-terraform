@@ -1,19 +1,14 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
+provider "aws" {
+  region = var.region
 }
 
 module "vpc" {
   source = "./vpc"
 
-  region      = "us-east-1"
-  cost_center = "pragma"
-  env         = "dev"
-  owner       = "Jonathan Vega"
+  region      = var.region
+  cost_center = var.cost_center
+  env         = var.env
+  owner       = var.owner
 
   name            = "pragma"
   cidr            = "10.0.0.0/16"
@@ -23,12 +18,16 @@ module "vpc" {
 }
 
 module "ec2_instance" {
-  source = "./ec2-instance"
+  source   = "./ec2-instance"
+  for_each = var.instances
 
-  region      = "us-east-1"
-  cost_center = "pragma"
-  env         = "dev"
-  owner       = "Jonathan Vega"
-  subnet_id   = module.vpc.public_subnets[0]
+  region      = var.region
+  cost_center = var.cost_center
+  env         = var.env
+  owner       = var.owner
+
+  name      = each.value.name
+  type      = each.value.type
+  subnet_id = each.value.is_public ? module.vpc.public_subnets[0] : module.vpc.private_subnets[0]
 }
 
