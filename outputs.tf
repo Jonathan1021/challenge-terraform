@@ -78,20 +78,20 @@ output "private_subnets_cidr_blocks" {
 ################################################################################
 output "instance_ids" {
   description = "IDs of the created instances"
-  value       = { for key, instance in module.ec2_instance : key => instance.id }
+  value       = [for key, instance in module.ec2_instance : instance.id ]
 }
 
-# output "public_ips" {
-#   description = "Public IP addresses of the instances"
-#   value       = module.ec2_instance[*].public_ip
-# }
+output "public_ips" {
+  description = "Public IP addresses of the instances"
+  value       = [for instance in module.ec2_instance : instance.public_ip]
+}
 
-# output "private_ips" {
-#   description = "Private IP addresses of the instances"
-#   value       = module.ec2_instance[*].private_ip
-# }
+output "private_ips" {
+  description = "Private IP addresses of the instances"
+  value       = [for instance in module.ec2_instance : instance.private_ip]
+}
 
-# output "instance_types" {
-#   description = "Types of instances deployed"
-#   value       = module.ec2_instance[*].type
-# }
+output "instance_types" {
+  description = "Types of instances deployed"
+  value       = [for instance in module.ec2_instance : instance.type]
+}
